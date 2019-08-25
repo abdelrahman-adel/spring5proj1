@@ -10,12 +10,19 @@ import org.springframework.context.annotation.ComponentScan;
 
 import com.master.spring.spring5proj1.business.Business1;
 import com.master.spring.spring5proj1.business.Business2;
+import com.master.spring.spring5proj1.data.data.InnerDao;
+import com.master.spring.spring5proj1.data.data.SomeClass;
 
 @ComponentScan(basePackages = "com.master.spring.spring5proj1")
 @SpringBootApplication
 public class Spring5proj1Application implements CommandLineRunner {
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+	private SomeClass SomeClass = new SomeClass();
+
+	@Autowired
+	private InnerDao innerDao;
 
 	@Autowired
 	private Business1 business1;
@@ -31,6 +38,8 @@ public class Spring5proj1Application implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		logger.info(business1.calculateSomething());
 		logger.info(business2.calculateSomething());
+		logger.info(innerDao.retrieveData());
+		logger.info(SomeClass.saySomething());
 	}
 
 }
