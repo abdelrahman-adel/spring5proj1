@@ -1,6 +1,9 @@
 package com.master.spring.spring5proj1.aspects;
 
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.slf4j.Logger;
@@ -14,44 +17,79 @@ public class UserAccessAspect {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	/**
-	 * NOTE: ASPECTS ONLY INTERCEPT BEANS
+	 * <strong>NOTE: ASPECTS ONLY INTERCEPT BEANS</strong><br/>
+	 * <br/>
 	 * 
 	 * "@Before": We should tell the annotation what will it run on, it takes this
 	 * pattern: execution(RETURN_TYPE PACKAGE.CLASS.METHOD(..)), an asterisk means
-	 * any matches.
+	 * any matches.<br/>
+	 * <br/>
 	 * 
 	 * Notice that we can't refer to the package by an asterisk, we have to be
-	 * specific about that; However, we can be more generic using 2 ways:
+	 * specific about that; However, we can be more generic using 2 ways:<br/>
 	 * 
 	 * - If we replaced the final pkg with an asterisk, this will intercept any
-	 * method on the same depth level.
+	 * method on the same depth level.<br/>
 	 * 
 	 * - If we remoced the final pkg and left it's place empty like that "..", this
-	 * will intercept any method on that level and deeper.
+	 * will intercept any method on that level and deeper.<br/>
+	 * <br/>
 	 * 
 	 * 
-	 * TERMINOLOGIES:
+	 * <strong>TERMINOLOGIES:</strong><br/>
+	 * <br/>
 	 * 
-	 * - PointCut: The PointCut is the expression passed to eg.Before annotation,
-	 * the interception point.
+	 * <strong>- PointCut:</strong> The PointCut is the expression passed to
+	 * eg.Before annotation, the interception point.<br/>
+	 * <br/>
 	 * 
-	 * - Advice: Advice is the body of the eg.Before method, the logic we will do
-	 * when we intercept a method.
+	 * <strong>- Advice:</strong> Advice is the body of the eg.Before method, the
+	 * logic we will do when we intercept a method.<br/>
+	 * <br/>
 	 * 
-	 * - Aspect: The PointCut + Advice is an aspect, what to intercept and what to
-	 * do when you intercept is the Aspect.
+	 * <strong>- Aspect:</strong> The PointCut + Advice is an aspect, what to
+	 * intercept and what to do when you intercept is the Aspect.<br/>
+	 * <br/>
 	 * 
-	 * - JoinPoint: The JoinPoint is the point that we joined, the specific method
-	 * that we intercepted it's call. If the PointCut matches 100 method, then there
-	 * will be 1 PointCut and 100 JoinPoints.
+	 * <strong>- JoinPoint:</strong> The JoinPoint is the point that we joined, the
+	 * specific method that we intercepted it's call. If the PointCut matches 100
+	 * method, then there will be 1 PointCut and 100 JoinPoints.<br/>
+	 * <br/>
+	 * 
+	 * <strong>- Weaving:</strong> The process that scans the application according
+	 * to the PointCut and making sure that this method will run at the right time
+	 * is called weaving. The process that implements AOP in the application is
+	 * called weaving.<br/>
+	 * <br/>
+	 * 
+	 * <strong>- Weaver:</strong> The framework that does the weaving, that
+	 * implements the weaving is called weaver.<br/>
 	 * 
 	 * @param joinPoint
 	 */
-	@Before("execution(* com.master.spring.spring5proj1..*.*(..))")
+	@Before("execution(* com.master.spring.spring5proj1.business.*.*(..))")
 	public void before(JoinPoint joinPoint) {
-		// Advise
+		// Advice
 		logger.info("Checking if the user has the previllage to access ..");
-		logger.info("Intercepted method call: {}", joinPoint);
+		logger.info("Before execution of: {}", joinPoint);
+	}
+
+	@AfterReturning(value = "execution(* com.master.spring.spring5proj1.business.*.*(..))", returning = "result")
+	public void afterReturning(JoinPoint joinPoint, Object result) {
+		// Advice
+		logger.info("After returning from: {} and returned: {}", joinPoint, result);
+	}
+
+	@AfterThrowing(pointcut = "execution(* com.master.spring.spring5proj1.business.*.*(..))", throwing = "result")
+	public void afterThrowing(JoinPoint joinPoint, Exception result) {
+		// Advice
+		logger.info("After throwing from: {} and Exception thrown: {}", joinPoint, result);
+	}
+
+	@After("execution(* com.master.spring.spring5proj1.business.*.*(..))")
+	public void afterReturning(JoinPoint joinPoint) {
+		// Advice
+		logger.info("After execution of: {}", joinPoint);
 	}
 
 }
