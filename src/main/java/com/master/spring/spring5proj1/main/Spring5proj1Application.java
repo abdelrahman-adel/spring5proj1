@@ -40,6 +40,7 @@ public class Spring5proj1Application implements CommandLineRunner {
 		logger.info(business2.calculateSomething());
 		logger.info(innerDao.retrieveData());
 		logger.info(SomeClass.saySomething());
+		innerDao.noDataRetrieval();
 	}
 
 }
